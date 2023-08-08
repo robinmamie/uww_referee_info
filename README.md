@@ -12,11 +12,9 @@ Install the python requirements:
 
 Run the script like so:
 
-    python int_referees.py list.pdf
+    python int_referees.py
 
-where `list.pdf` is the filename of the official UWW referee list. The latest list can be [downloaded here](https://uww.org/development/referees).
-
-This script produces the file `int_referees.csv`.
+This script produces the file `int_referees.csv`, the result of the parsing/scraping, and `list.pdf`, which is the official referees' list downloaded from the UWW website.
 
 The scraping takes a while: the requests were not parallelized to avoid DoSing the Athena system/being IP-banned.
 

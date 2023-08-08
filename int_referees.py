@@ -10,7 +10,20 @@ from datetime import datetime, date
 from tqdm import tqdm
 
 
-def extract_license_numbers_from_pdf(filename):
+def download_referee_list_link():
+    soup = BeautifulSoup(requests.get('https://uww.org/development/referees').content, "html.parser")
+    for link in soup.find_all('a'):
+        if "Referees' list" in link.text and 'Beach' not in link.text:
+            pdf_link = link.get('href')
+            pdf_file = requests.get(pdf_link)
+            filename = 'list.pdf'
+            with open(filename, 'wb') as f:
+                f.write(pdf_file.content)
+                return filename
+
+
+def extract_license_numbers_from_pdf():
+    filename = download_referee_list_link()
     # Read PDF content
     reader = PyPDF2.PdfReader(filename)
     contents = '\n'.join([page.extract_text() for page in reader.pages])
@@ -58,14 +71,14 @@ def save_info_to_file(referees):
         writer.writerows(referees)
 
 
-def get_international_referees_info(filename):
-    license_numbers = extract_license_numbers_from_pdf(filename)
+def get_international_referees_info():
+    license_numbers = extract_license_numbers_from_pdf()
     referees = get_referee_info_from_athena(license_numbers)
     save_info_to_file(referees)
 
 
 def main():
-    get_international_referees_info(sys.argv[1])
+    get_international_referees_info()
 
 
 if __name__ == '__main__':
