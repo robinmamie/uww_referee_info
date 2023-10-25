@@ -47,13 +47,17 @@ def get_referee_info_from_athena(license_numbers):
     referees = []
     for license_number in tqdm(license_numbers):
         referee = {'id_number': license_number}
-        athena_link = f"https://uww.io/r/{license_number}"
+        athena_link = f"https://athena.uww.org/p/{license_number}"
         page = fetch_referee_page(athena_link)
         soup = BeautifulSoup(page.content, "html.parser")
         referee['name'] = soup.find_all("h1")[1].text.split('(')[0].strip()
         referee['sex'] = soup.find_all("h1")[1].text.split('(')[-1].split(')')[0].upper()
         referee['country'] = ' '.join(soup.find("h4").text.split()).split(' - ')[1].strip()
-        referee['category'] = soup.find('span',  {'class': 'label-referee'}).text.split()[-1]
+        category = soup.find('span',  {'class': 'label-referee'})
+        if category:
+            referee['category'] = category.text.split()[-1]
+        else:
+            referee['category'] = None
         referee['birthdate'] = datetime.strptime(' '.join(soup.find("h4").text.split()).split(' - ')[0], "%b %d, %Y")
         img_tag = soup.find_all("img")
         referee['photo'] = img_tag[1]["src"] if len(img_tag) > 1 else ''

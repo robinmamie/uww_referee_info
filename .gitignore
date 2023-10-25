@@ -1,5 +1,8 @@
 int_referees.csv
 list.pdf
+*.ipynb
+
+archive
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
