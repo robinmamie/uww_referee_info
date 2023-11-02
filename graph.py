@@ -24,7 +24,7 @@ def graph_data():
     for category in colors:
         df_tmp_m = get_ref_count(df_int, category, 'M')
         df_tmp_f = get_ref_count(df_int, category, 'F')
-        df_tmp = pd.DataFrame({'Female': df_tmp_f['name'], 'Male': df_tmp_m['name']})
+        df_tmp = pd.DataFrame({f"Female ({df_tmp_f['name'].sum()})": df_tmp_f['name'], f"Male ({df_tmp_m['name'].sum()})": df_tmp_m['name']})
 
         ax = df_tmp.plot(kind="bar", stacked=True, color=colors[category], figsize=(10,3))
         nb_ref_cat =  df_int[df_int['category'] == category]['name'].count()
