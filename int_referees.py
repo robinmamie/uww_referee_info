@@ -1,3 +1,5 @@
+import pandas as pd
+
 import csv
 import PyPDF2
 import re
