@@ -71,13 +71,31 @@ def get_referee_info_from_athena(license_numbers):
     return referees
 
 
+def make_hyperlink(value):
+    return f'=HYPERLINK("{value}")'
+
+
 def save_info_to_file(referees):
     for referee in tqdm(referees):
         referee['birthdate'] = referee['birthdate'].strftime('%Y-%m-%d')
-    with open('int_referees.csv', 'w+') as f:
+    with open('uww_referees.csv', 'w+') as f:
         writer = csv.DictWriter(f, fieldnames=referees[0].keys())
         writer.writeheader()
         writer.writerows(referees)
+
+    df = pd.read_csv('uww_referees.csv')
+    df['photo'] = df['photo'].apply(make_hyperlink)
+    df['athena'] = df['athena'].apply(make_hyperlink)
+
+    writer = pd.ExcelWriter('uww_referees.xlsx') 
+    df.to_excel(writer, sheet_name='UWW referees', index=False, na_rep='NaN')
+    
+    for column in df:
+        column_length = max(df[column].astype(str).map(len).max(), len(column))
+        col_idx = df.columns.get_loc(column)
+        writer.sheets['UWW referees'].set_column(col_idx, col_idx, column_length)
+    
+    writer.close()
 
 
 def get_international_referees_info():
