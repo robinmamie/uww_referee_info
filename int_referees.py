@@ -64,6 +64,9 @@ def get_referee_info_from_athena(license_numbers):
             img_tag = soup.find_all("img")
             referee['photo'] = img_tag[1]["src"] if len(img_tag) > 1 else ''
             referee['athena'] = athena_link
+            activity_field = soup.find('div', {'class': 'alert'})
+            activity_field_text = activity_field.text if activity_field else ''
+            referee['is_active'] = "Active referee license" in activity_field_text
             referees.append(referee)
     return referees
 
