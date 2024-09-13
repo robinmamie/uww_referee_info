@@ -1,4 +1,6 @@
-int_referees.csv
+*.csv
+*.xlsx
+*.png
 list.pdf
 *.ipynb
 
