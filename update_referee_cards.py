@@ -11,7 +11,7 @@ from tqdm import tqdm
 cc = coco.CountryConverter()
 emoji_a = 127462
 base_path = "referees"
-history_header = '<button class="toggle">Show history</button>\n<div id="history">\n'
+history_header = '<button id="toggle">Show History</button>\n<div id="history">\n'
 date = datetime.datetime.today().strftime('%Y-%m-%d')
 
 with open("uww_card.html") as f:
@@ -79,7 +79,7 @@ def change_referee(current, changes):
         new_card = new_card.replace("blink_me__country", "blink_me__")
     if "sex" in data_changed or "birthdate" in data_changed:
         new_card = new_card.replace("blink_me__other", "blink_me__")
-    new_page = page.replace("<!--new_info-->", new_card)
+    new_page = page.replace("<!--new_info-->\n", new_card)
     with open(f"{base_path}/{int(data['id_number']):07d}.html", "w") as f:
         f.write(new_page)
 
@@ -105,7 +105,7 @@ def remove_referee(data):
     new_card = new_card.replace("<!--id_number-->", data['id_number'])
     new_card = new_card.replace("<!--name-->", data['name'])
 
-    new_page = page.replace("<!--new_info-->", new_card)
+    new_page = page.replace("<!--new_info-->\n", new_card)
     with open(f"{base_path}/{int(data['id_number']):07d}.html", "w") as f:
         f.write(new_page)
 

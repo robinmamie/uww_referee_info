@@ -5,6 +5,7 @@ log*
 list.pdf
 *.ipynb
 execut*.sh
+referee_changes.html
 
 archive
 last

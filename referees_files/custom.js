@@ -3,7 +3,11 @@ const name = $("h2").eq(1).text();
 $(document).prop('title', id_number + ' - ' + name);
 
 $('#history').hide();
-$('button#toggle').click(function (e) {
+$('#toggle').click(function (e) {
     $('.blink_me__').toggleClass('blink_me');
-    $('#history').show();
+    $('#history').toggle();
+
+    const text = $('#toggle').text();
+    $('#toggle').text(
+        text == "Show History" ? "Hide History" : "Show History");
 });
