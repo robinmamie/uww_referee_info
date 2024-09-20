@@ -1,0 +1,78 @@
+body {
+    font-family: Verdana, Helvetica, sans-serif;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-color: #222222;
+    color: white;
+}
+a {
+    color: white;
+    text-decoration: none;
+}
+img {
+    max-height: 200px;
+}
+button {
+    margin: 20px;
+}
+
+.category {
+    color: gold;
+}
+.idCard {
+    padding: 10px 0;
+    width: 500px;
+}
+.idCard:after {
+    float: middle;
+    content: "";
+    display: table;
+    clear: both;
+}
+.idCardInside {
+    display: flex;
+    align-items: top;
+    justify-content: center;
+}
+.insideColumn {
+    float: left;
+    padding: 20px;
+}
+
+.left {
+    width: 30%;
+    background-color: lightgray;
+    height: auto;
+}
+.right_True {
+    width: 50%;
+    background-color: green;
+}
+.right_False {
+    width: 50%;
+    background-color: darkred;
+}
+.right_null {
+    width: 50%;
+    background-color: black;
+}
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* basic positioning */
+.legend { list-style: none; }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
+/* your colors */
+.legend .active { background-color: green; }
+.legend .inactive { background-color: darkred; }
+.legend .retired { background-color: black; }

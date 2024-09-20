@@ -70,15 +70,15 @@ def change_referee(current, changes):
     new_card = new_card.replace("<!--name-->", data['name'])
     data_changed = list(changes['changes'].keys())
     if "category" in data_changed:
-        new_card = new_card.replace("blink_me__category", "blink_me")
+        new_card = new_card.replace("blink_me__category", "blink_me__")
     if "photo" in data_changed:
-        new_card = new_card.replace("blink_me__photo", "blink_me")
+        new_card = new_card.replace("blink_me__photo", "blink_me__")
     if "name" in data_changed:
-        new_card = new_card.replace("blink_me__name", "blink_me")
+        new_card = new_card.replace("blink_me__name", "blink_me__")
     if "country" in data_changed:
-        new_card = new_card.replace("blink_me__country", "blink_me")
+        new_card = new_card.replace("blink_me__country", "blink_me__")
     if "sex" in data_changed or "birthdate" in data_changed:
-        new_card = new_card.replace("blink_me__other", "blink_me")
+        new_card = new_card.replace("blink_me__other", "blink_me__")
     new_page = page.replace("<!--new_info-->", new_card)
     with open(f"{base_path}/{int(data['id_number']):07d}.html", "w") as f:
         f.write(new_page)
@@ -125,8 +125,31 @@ def main():
         remove_referee(old_ref)
 
     sys.stdout = open('referee_changes.html','wt')
+    print("""<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
+        <title>Referee Changes</title>
+        <meta name="description" content="rgfm's UWW Tools"/>
+        <link rel="canonical" href="https://uww.rgfm.ch/"/i>
+        <style>
+            body {margin: 5% auto; background: #ffffff; color: #000000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.8; text-shadow: 0 1px 0 #ffffff; max-width: 73%;}
+            code {background: white;}
+            a {border-bottom: 1px solid #444444; color: #444444; text-decoration: none;}
+            a:hover {border-bottom: 0;}
+            img {width: 80%; height: auto;}
+            form  { display: table;      }
+            p     { display: table-row;  }
+            label { display: table-cell; }
+            input { display: table-cell; }
+        </style>
+    </head>
+    <body>
+        <header>""")
     if diff['changed']:
-        print(f"<h2>Referee Updates, {date}</h2>")
+        print(f"<h1>Referee Updates, {date}</h1>")
+        print("</header>")
         print("<ul>")
         for changes in diff['changed']:
             print("<li>")
@@ -157,6 +180,8 @@ def main():
             id = int(old_ref["id_number"])
             print(f'<li><a href="referees/{id:07d}.html">Referee {id} ({old_ref["name"]} - {old_ref["country"]})</a></li>')
         print("</ul>")
+    print("</body>")
+    print("</html>")
 
 
 if __name__ == '__main__':
