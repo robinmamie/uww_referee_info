@@ -1,10 +1,13 @@
 *.csv
-*.xlsx
+log*
 *.png
+*.xlsx
 list.pdf
 *.ipynb
+execut*.sh
 
 archive
+referees
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

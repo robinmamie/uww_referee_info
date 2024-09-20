@@ -1,7 +1,10 @@
 beautifulsoup4==4.12.2
+country_converter==1.2
+csv_diff==1.2
 matplotlib==3.7.1
 pandas==1.5.3
 PyPDF2==2.10.5
 PyPDF2==3.0.1
 Requests==2.31.0
 tqdm==4.65.0
+xlsxwriter==3.2.0

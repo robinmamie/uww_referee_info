@@ -42,11 +42,11 @@ def graph_data():
             f"Inactive ({df_tmp_inactive['name'].sum()})": df_tmp_inactive['name'],
         })
 
-        ax = df_tmp.plot(kind="bar", stacked=True, color=colors[category], figsize=(10,3))
+        ax = df_tmp.plot(kind="bar", stacked=True, color=colors[category], figsize=(10,4))
         ax.set_title(f"UWW {category} ({nb_ref_cat} active, {nb_ref_cat_all} overall referees)\nsplit by gender")
         ax.set_xlabel("Birthyear")
         ax.set_ylabel("Number of referees\nby birthyear")
-        ax.set_ylim(0, 40)
+        ax.set_ylim(0, 45)
         ax.grid(axis='y')
         plt.savefig(f'img/stats_{category}.png', dpi=300, bbox_inches='tight')
 
