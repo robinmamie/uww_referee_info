@@ -30,7 +30,7 @@ def create_referee(data):
     new_card = card.replace("<!--current_day-->", date)
     new_card = new_card.replace("<!--is_active-->", data['is_active'])
     new_card = new_card.replace("<!--name-->", data['name'])
-    category = data['category'] if 'I' in data['category'] else "?"
+    category = data['category'] if data['category'] in ["III","II","I","IS","RCM"] else "?"
     new_card = new_card.replace("<!--category-->", category)
     new_card = new_card.replace("<!--photo-->", data['photo'])
     new_card = new_card.replace("<!--birthdate-->", data['birthdate'])
@@ -56,7 +56,7 @@ def change_referee(current, changes):
     
     new_card = card.replace("<!--current_day-->", date)
     new_card = new_card.replace("<!--is_active-->", data['is_active'])
-    category = data['category'] if 'I' in data['category'] else "?"
+    category = data['category'] if data['category'] in ["III","II","I","IS","RCM"] else "?"
     new_card = new_card.replace("<!--category-->", category)
     new_card = new_card.replace("<!--photo-->", data['photo'])
     new_card = new_card.replace("<!--birthdate-->", data['birthdate'])
@@ -92,7 +92,7 @@ def remove_referee(data):
     
     new_card = card.replace("<!--current_day-->", date)
     new_card = new_card.replace("<!--is_active-->", "null")
-    category = data['category'] if 'I' in data['category'] else "?"
+    category = data['category'] if data['category'] in ["III","II","I","IS","RCM"] else "?"
     new_card = new_card.replace("<!--category-->", category)
     new_card = new_card.replace("<!--photo-->", data['photo'])
     new_card = new_card.replace("<!--birthdate-->", data['birthdate'])
@@ -111,9 +111,7 @@ def remove_referee(data):
 
 
 def main():
-    
-        
-    old = load_csv(open("last/uww_referees.csv"), key="id_number")
+    old = load_csv(open("last"), key="id_number")
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
     
@@ -147,9 +145,9 @@ def main():
     </head>
     <body>
         <header>""")
+    print(f"<h1>Referee Updates, {date}</h1>")
+    print("</header>")
     if diff['changed']:
-        print(f"<h1>Referee Updates, {date}</h1>")
-        print("</header>")
         print("<ul>")
         for changes in diff['changed']:
             print("<li>")
