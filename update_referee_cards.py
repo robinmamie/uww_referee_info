@@ -115,6 +115,8 @@ def main():
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
     
+    #for _, data in tqdm(old.items()):
+    #    create_referee(data)
     for changes in tqdm(diff['changed']):
         change_referee(current, changes)
     for new_ref in tqdm(diff['added']):
