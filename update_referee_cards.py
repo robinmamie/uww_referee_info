@@ -92,7 +92,7 @@ def remove_referee(data: dict) -> None:
     update_page_on_disk(new_card, data["id_number"])
 
 
-def main():
+def main() -> None:
     old = load_csv(open("last"), key="id_number")
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)

@@ -12,7 +12,7 @@ from datetime import datetime, date
 from tqdm import tqdm
 
 
-def download_referee_list_link():
+def download_referee_list_link() -> str:
     soup = BeautifulSoup(requests.get('https://uww.org/development/referees').content, "html.parser")
     for link in soup.find_all('a'):
         if "Referees' list" in link.text and 'Beach' not in link.text:
@@ -24,7 +24,7 @@ def download_referee_list_link():
                 return filename
 
 
-def extract_license_numbers_from_pdf():
+def extract_license_numbers_from_pdf() -> list[int]:
     filename = download_referee_list_link()
     # Read PDF content
     reader = PyPDF2.PdfReader(filename)
@@ -41,11 +41,11 @@ def extract_license_numbers_from_pdf():
     return license_numbers
 
 
-def fetch_referee_page(url):
+def fetch_referee_page(url: str) -> str:
     return requests.get(url)
 
 
-def get_referee_info_from_athena(license_numbers):
+def get_referee_info_from_athena(license_numbers: list[int]) -> list[dict]:
     referees = []
     for license_number in tqdm(license_numbers):
         referee = {'id_number': license_number}
@@ -73,11 +73,11 @@ def get_referee_info_from_athena(license_numbers):
     return referees
 
 
-def make_hyperlink(value):
+def make_hyperlink(value: str) -> str:
     return f'=HYPERLINK("{value}")'
 
 
-def save_info_to_file(referees):
+def save_info_to_file(referees: list[dict]) -> None:
     for referee in tqdm(referees):
         referee['birthdate'] = referee['birthdate'].strftime('%Y-%m-%d')
     with open('uww_referees.csv', 'w+') as f:
@@ -100,13 +100,13 @@ def save_info_to_file(referees):
     writer.close()
 
 
-def get_international_referees_info():
+def get_international_referees_info() -> None:
     license_numbers = extract_license_numbers_from_pdf()
     referees = get_referee_info_from_athena(license_numbers)
     save_info_to_file(referees)
 
 
-def main():
+def main() -> None:
     get_international_referees_info()
 
 
