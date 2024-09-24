@@ -13,6 +13,7 @@ emoji_a = 127462
 base_path = "referees"
 history_header = '<button id="toggle">Show History</button>\n<div id="history">\n'
 date = datetime.datetime.today().strftime('%Y-%m-%d')
+blink_class_prefix = "blink_me__"
 
 with open("uww_card.html") as f:
     card = f.read()
@@ -20,13 +21,18 @@ with open("uww_referee.html") as f:
     page = f.read()
 
 
-def get_emoji_flag(country2: str):
-    a = "&#x" + format(emoji_a + ord(country2[0]) - ord("A"), "X")
-    b = "&#x" + format(emoji_a + ord(country2[1]) - ord("A"), "X")
-    return a + b
+def get_emoji_letter_flag(letter: str) -> str:
+    return "&#x" + format(emoji_a + ord(letter) - ord("A"), "X")
 
 
-def update_card(data):
+def get_emoji_flag(country2: str) -> str:
+    return get_emoji_letter_flag(country2[0]) + get_emoji_letter_flag(country2[1])
+
+
+def get_ref_path(id_number: str) -> str:
+    return f"{base_path}/{int(id_number):07d}.html"
+
+def update_card(data: dict) -> str:
     new_card = card.replace("<!--current_day-->", date)
     new_card = new_card.replace("<!--is_active-->", data['is_active'])
     new_card = new_card.replace("<!--name-->", data['name'])
@@ -44,40 +50,38 @@ def update_card(data):
     return new_card
 
 
-def update_page_on_disk(new_card, id_number):
-    html_filename = "f{int(id_number):07d}.html"
-    filename = [filename for filename in os.listdir(f'{base_path}') if html_filename in filename][0]
-    with open(f"{base_path}/{filename}") as f:
-        page = f.read()
-    page = page.replace(history_header, "")
-    new_page = page.replace("<!--new_info-->\n", new_card)
-    with open(f"{base_path}/{html_filename}", "w") as f:
+def update_page_on_disk(new_card: str, id_number: str) -> None:
+    html_filename_path = get_ref_path(id_number)
+    with open(html_filename_path) as f:
+        new_page = f.read()
+    new_page = new_page.replace(history_header, "")
+    new_page = new_page.replace("<!--new_info-->\n", new_card)
+    with open(html_filename_path, "w") as f:
         f.write(new_page)
 
 
-def create_referee(data):
+def create_referee(data: dict, already_exists: bool) -> None:
     new_card = update_card(data)
+    new_page = page
+    if already_exists:
+        html_filename_path = get_ref_path(data['id_number'])
+        with open(html_filename_path) as f:
+            new_page = f.read()
     new_page = page.replace("<!--new_info-->", new_card)
     new_page = new_page.replace("<!--id_number-->", data['id_number'])
-    with open(f"{base_path}/{int(data['id_number']):07d}.html", "w") as f:
+    with open(get_ref_path(data['id_number']), "w") as f:
         f.write(new_page)
 
 
-def change_referee(current, changes):
+def change_referee(current: dict, changes: dict) -> None:
     data = current[changes['key']]
     new_card = update_card(data)
     
-    data_changed = list(changes['changes'].keys())
-    if "category" in data_changed:
-        new_card = new_card.replace("blink_me__category", "blink_me__")
-    if "photo" in data_changed:
-        new_card = new_card.replace("blink_me__photo", "blink_me__")
-    if "name" in data_changed:
-        new_card = new_card.replace("blink_me__name", "blink_me__")
-    if "country" in data_changed:
-        new_card = new_card.replace("blink_me__country", "blink_me__")
-    if "sex" in data_changed or "birthdate" in data_changed:
-        new_card = new_card.replace("blink_me__other", "blink_me__")
+    for item_changed in list(changes['changes'].keys()):
+        if item_changed in ["sex", "birthdate"]:
+            new_card = new_card.replace(f"{blink_class_prefix}other", blink_class_prefix)
+        else:
+            new_card = new_card.replace(f"{blink_class_prefix}{item_changed}", blink_class_prefix)
 
     update_page_on_disk(new_card, changes["key"])
 
@@ -92,12 +96,11 @@ def main():
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
     
-    #for _, data in tqdm(old.items()):
-    #    create_referee(data)
     for changes in tqdm(diff['changed']):
         change_referee(current, changes)
     for new_ref in tqdm(diff['added']):
-        create_referee(new_ref)
+        already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
+        create_referee(new_ref, already_exists)
     for old_ref in tqdm(diff['removed']):
         remove_referee(old_ref)
 
@@ -131,7 +134,7 @@ def main():
         for changes in diff['changed']:
             print("<li>")
             id = int(changes["key"])
-            print(f'<a href="referees/{id:07d}.html">Referee {id} ({current[str(id)]["name"]} - {current[str(id)]["country"]})</a> has changed:')
+            print(f'<a href="{get_ref_path(id)}">Referee {id} ({current[str(id)]["name"]} - {current[str(id)]["country"]})</a> has changed:')
             print("<ul>")
             for col, from_to in changes['changes'].items():
                 if col == 'photo':
@@ -153,7 +156,7 @@ def main():
         print("<ul>")
         for new_ref in diff['added']:
             id = int(new_ref["id_number"])
-            print(f'<li><a href="referees/{id:07d}.html">Referee {id} ({new_ref["name"]} - {new_ref["country"]})</a></li>')
+            print(f'<li><a href="{get_ref_path(id)}">Referee {id} ({new_ref["name"]} - {new_ref["country"]})</a></li>')
         print("</ul>")
     
     if diff['removed']:
@@ -161,7 +164,7 @@ def main():
         print("<ul>")
         for old_ref in diff['removed']:
             id = int(old_ref["id_number"])
-            print(f'<li><a href="referees/{id:07d}.html">Referee {id} ({old_ref["name"]} - {old_ref["country"]})</a></li>')
+            print(f'<li><a href="{get_ref_path(id)}">Referee {id} ({old_ref["name"]} - {old_ref["country"]})</a></li>')
         print("</ul>")
     print("</body>")
     print("</html>")
