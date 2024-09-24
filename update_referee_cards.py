@@ -32,6 +32,7 @@ def get_emoji_flag(country2: str) -> str:
 def get_ref_path(id_number: str) -> str:
     return f"{base_path}/{int(id_number):07d}.html"
 
+
 def update_card(data: dict) -> str:
     new_card = card.replace("<!--current_day-->", date)
     new_card = new_card.replace("<!--is_active-->", data['is_active'])
@@ -86,7 +87,7 @@ def change_referee(current: dict, changes: dict) -> None:
     update_page_on_disk(new_card, changes["key"])
 
 
-def remove_referee(data):
+def remove_referee(data: dict) -> None:
     new_card = update_card(data)
     update_page_on_disk(new_card, data["id_number"])
 
