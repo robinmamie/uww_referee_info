@@ -1,17 +1,16 @@
-<!--new_info-->
-	<h2>State from <!--current_day--></h2>
-	<a href="https://athena.uww.org/p/<!--id_number-->">
+<div id="state">
+	<h2 id="stateTitle"/>
+	<a class="athena" id="userAthena">
 	<div class="idCardInside">
 	<div class="insideColumn left">
-	<img class="blink_me__photo" src="<!--photo-->" alt="Photo of referee <!--id_number-->">
+	<img class="photo" id="userPhoto"/>
 	</div>
-	<div class="insideColumn right_<!--is_active-->">
-	<h2 class="blink_me__name"><!--name--></h2>
-	<h3 class="blink_me__country"><!--country--> <!--emoji_flag--></h3> 
-	<h4 class="blink_me__other"><!--birthdate--> <!--sex--></h4>
-	<div class="category"><h3 class="blink_me__category">Category <!--category--></h3></div>
+	<div class="insideColumn right" id="right">
+	<h2 class="name" id="userName"/>
+	<h3 class="country" id="userCountry"/> 
+	<h4 class="other" id="userOther"><span class="birthdate" id="userBirthdate"/> <span class="sex" id="userSex"/></h4>
+	<h3 class="category" id="userCategory"/>
 	</div>
 	</div>
 	</a>
-<button id="toggle">Show History</button>
-<div id="history">
+</div>

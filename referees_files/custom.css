@@ -12,53 +12,44 @@ a {
     text-decoration: none;
 }
 img {
-    max-height: 160px;
+    max-height: 200px;
+    -webkit-filter: drop-shadow(0px 16px 10px rgba(0,0,0,0.6));
+    -moz-filter: drop-shadow(0px 16px 10px rgba(0,0,0,0.6));
+    -ms-filter: drop-shadow(0px 16px 10px rgba(0,0,0,0.6));
+    -o-filter: drop-shadow(0px 16px 10px rgba(0,0,0,0.6));
+     filter: drop-shadow(0px 16px 10px rgba(0,0,0,0.6));
 }
 button {
     margin: 20px;
 }
 
-.category {
-    color: gold;
-}
-.idCard {
-    padding: 10px 0;
-    width: 500px;
-}
-.idCard:after {
-    float: middle;
-    content: "";
-    display: table;
-    clear: both;
+@media (max-width: 600px) {
+    .idCard {
+        width: 100%;
+        padding: 10px;
+    }
+    .left {
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    .right {
+        width: 100%;
+    }
 }
 .idCardInside {
     display: flex;
-    align-items: top;
     justify-content: center;
 }
 .insideColumn {
-    float: left;
     padding: 20px;
+    background-color: lightgray;
 }
 
-.left {
-    width: 30%;
-    background-color: lightgray;
-    height: auto;
+.category {
+    color: gold;
 }
-.right_True {
-    width: 50%;
-    background-color: green;
-}
-.right_False {
-    width: 50%;
-    background-color: darkred;
-}
-.right_null {
-    width: 50%;
-    background-color: black;
-}
-.blink_me {
+.blink {
   animation: blinker 1s linear infinite;
 }
 
@@ -68,11 +59,22 @@ button {
   }
 }
 
-/* basic positioning */
 .legend { list-style: none; }
 .legend li { float: left; margin-right: 10px; }
 .legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; }
-/* your colors */
-.legend .active { background-color: green; }
-.legend .inactive { background-color: darkred; }
-.legend .retired { background-color: black; }
+.legend .active, .activityTrue { background-color: green; }
+.legend .inactive, .activityFalse { background-color: darkred; }
+.legend .retired, .activityOver { background-color: black; }
+.legend .unknown, .activityUnknown { background-color: gray; }
+
+#currentState {
+    border: 2px solid #555;
+    padding: 15px;
+    background-color: #333;
+    margin-bottom: 20px;
+}
+#history {
+    border: 2px solid #444;
+    padding: 15px;
+    background-color: #2a2a2a;
+}
