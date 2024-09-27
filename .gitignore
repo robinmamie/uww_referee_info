@@ -6,6 +6,7 @@ list.pdf
 *.ipynb
 execut*.sh
 referee_changes.html
+!res/referee_changes.html
 
 archive
 last

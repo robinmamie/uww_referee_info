@@ -16,7 +16,7 @@ function daysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
 }
 
-function calcDate(date1, date20) {
+function calcDate(date1, date2) {
     /*
     * calcDate() : Calculates the difference between two dates
     * @date1 : "First Date"
