@@ -9,14 +9,14 @@ $('#toggle').click(function (e) {
 
     const text = $('#toggle').text();
     $('#toggle').text(
-        text == "Show History" ? "Hide History" : "Show History");
+        text == "Show History ↓" ? "Hide History ↑" : "Show History ↓");
 });
 
 function daysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
 }
 
-function calcDate(date1, date2){
+function calcDate(date1, date20) {
     /*
     * calcDate() : Calculates the difference between two dates
     * @date1 : "First Date"
@@ -38,7 +38,7 @@ function calcDate(date1, date2){
 
     let months_passed = month2 - month1;
     if (month1 >= month2 && !birthdayPassed) {
-	months_passed += 12;
+    	months_passed += 12;
     }
     if (!monthDiffPassed) {
         months_passed -= 1;

@@ -15,7 +15,11 @@ emoji_a = 127462
 base_path = "referees"
 date = datetime.today().strftime('%Y-%m-%d')
 possible_categories = ["III","II","I","IS","RCM"]
+
 BLINK_CLASS = "blink_off"
+ID_CARD_PATH = "res/id_card.html"
+REF_PAGE_PATH = "res/referee_page.html"
+CHANGELOG_PATH = "res/referee_changes.html"
 
 def format_date(date_string: str) -> str:
     new_date = datetime.strptime(date_string, "%Y-%m-%d")
@@ -44,8 +48,7 @@ def get_change_reason(data: dict, changes: dict) -> str:
             return "Category readded on"
         if possible_categories.index(change[0]) <= possible_categories.index(change[1]):
             return "Category upgraded on"
-        else:
-            return "Category downgraded on"
+        return "Category downgraded on"
     if "name" in changes:
         return "Named changed on"
     if "sex" in changes:
@@ -78,7 +81,7 @@ def setValue(doc: BeautifulSoup, id: str, newValue: str, attribute='text') -> No
 
 
 def update_card(data: dict, reason: str, is_removed=False) -> BeautifulSoup:
-    with open("uww_card.html") as f:
+    with open(ID_CARD_PATH) as f:
         card = BeautifulSoup(f.read(), 'html.parser')
 
     referee_id = data['id_number']
@@ -106,7 +109,7 @@ def update_card(data: dict, reason: str, is_removed=False) -> BeautifulSoup:
 
 
 def update_referee(card: BeautifulSoup, already_exists: bool, id_number: str) -> None:
-    path = "uww_referee.html"
+    path = REF_PAGE_PATH
     if already_exists:
         path = get_ref_path(id_number)
     with open(path) as f:
@@ -142,6 +145,78 @@ def remove_referee(data: dict) -> None:
     update_referee(update_card(data, "Retired as of", True), True, data["id_number"])
 
 
+def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: bool) -> None:
+    if diff[key]:
+        title = doc.new_tag("h2")
+
+        titles = {
+            'changed': 'Changes',
+            'added': 'New Referees',
+            'removed': 'Retired Referees',
+        }
+        
+        title.string = f"{titles[key]} ({len(diff[key])})"
+        doc.find(id=key).insert_after(title)
+
+        added_list = doc.new_tag("ul")
+        title.insert_after(added_list)
+
+        for ref in diff[key]:
+            item = doc.new_tag("li")
+            added_list.append(item)
+
+            if sublist:
+                id = int(ref["key"])
+                ind_data = data[str(id)]
+            else:
+                id = int(ref["id_number"])
+                ind_data = ref
+                
+            name = ind_data["name"]
+            country = ind_data["country"]
+            category = ind_data["category"]
+            birthdate = ind_data["birthdate"]
+            age = int(date.split('-')[0]) - int(birthdate.split('-')[0])
+
+            link = doc.new_tag("a", href=get_ref_path(id))
+            link.string = f"{name} ({country}, {category}, {age} years old this year)"
+            item.append(link)
+
+            if sublist:
+                inside_list = doc.new_tag("ul")
+                item.append(inside_list)
+    
+                for col, from_to in ref['changes'].items():
+                    inside_item = doc.new_tag("li")
+                    inside_list.append(inside_item)
+                    if col == 'photo':
+                        inside_item.string = "The profile picture has changed."
+                    elif col == 'is_active':
+                        if from_to[1]:
+                            inside_item.string = "Licence is now active."
+                        else:
+                            inside_item.string = "Licence has been deactivated."
+                    else:
+                        fromStr = from_to[0] if from_to[0] else "?"
+                        inside_item.string = f"{col.title().replace('_', ' ')} from {fromStr} to {from_to[1]}"
+
+
+def save_changelog(data: dict, diff: dict) -> None:
+    with open(CHANGELOG_PATH) as f:
+        changelog = BeautifulSoup(f.read(), 'html.parser')
+
+    title = "Referee Updates"
+    changelog.find("title").string = f"{title} - {date}"
+    changelog.find(id="title").string = f"{title}, {format_date(date)}"
+
+    list_changes(changelog, data, diff, 'changed', True)
+    list_changes(changelog, data, diff, 'added', False)
+    list_changes(changelog, data, diff, 'removed', False)
+
+    with open(CHANGELOG_PATH.split("/")[-1], "w") as f:
+        f.write(str(changelog))
+
+
 def main() -> None:
     old = load_csv(open("last"), key="id_number")
     current = load_csv(open("uww_referees.csv"), key="id_number")
@@ -155,74 +230,8 @@ def main() -> None:
         create_referee(new_ref, already_exists)
     for old_ref in diff['removed']:
         remove_referee(old_ref)
-    if diff['columns_added']:
-        for key in current.keys():
-            change_referee(current, {'key': key, 'changes': {'new_is_active': ''}})
 
-    sys.stdout = open('referee_changes.html','wt')
-    print("""<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
-        <title>Referee Changes</title>
-        <meta name="description" content="rgfm's UWW Tools"/>
-        <link rel="canonical" href="https://uww.rgfm.ch/"/i>
-        <style>
-            body {margin: 5% auto; background: #ffffff; color: #000000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.8; text-shadow: 0 1px 0 #ffffff; max-width: 73%;}
-            code {background: white;}
-            a {border-bottom: 1px solid #444444; color: #444444; text-decoration: none;}
-            a:hover {border-bottom: 0;}
-            img {width: 80%; height: auto;}
-            form  { display: table;      }
-            p     { display: table-row;  }
-            label { display: table-cell; }
-            input { display: table-cell; }
-        </style>
-    </head>
-    <body>
-        <header>""")
-    print(f"<h1>Referee Updates, {date}</h1>")
-    print("</header>")
-    if diff['changed']:
-        print("<ul>")
-        for changes in diff['changed']:
-            print("<li>")
-            id = int(changes["key"])
-            print(f'<a href="{get_ref_path(id)}">Referee {id} ({current[str(id)]["name"]} - {current[str(id)]["country"]})</a> has changed:')
-            print("<ul>")
-            for col, from_to in changes['changes'].items():
-                if col == 'photo':
-                    print(f"<li>The profile picture</li>")
-                elif col == 'is_active':
-                    if from_to[1]:
-                        print("<li>Licence is now active.</li>")
-                    else:
-                        print("<li>Licence has been deactivated.</li>")
-                else:
-                    fromStr = from_to[0] if from_to[0] else "?"
-                    print(f"<li>{col.title().replace('_', ' ')} from {fromStr} to {from_to[1]}</li>")
-            print("</ul>")
-            print("</li>")
-        print("</ul>")
-    
-    if diff['added']:
-        print("<h2>New Referees</h2>")
-        print("<ul>")
-        for new_ref in diff['added']:
-            id = int(new_ref["id_number"])
-            print(f'<li><a href="{get_ref_path(id)}">Referee {id} ({new_ref["name"]} - {new_ref["country"]})</a></li>')
-        print("</ul>")
-    
-    if diff['removed']:
-        print("<h2>Retired Referees</h2>")
-        print("<ul>")
-        for old_ref in diff['removed']:
-            id = int(old_ref["id_number"])
-            print(f'<li><a href="{get_ref_path(id)}">Referee {id} ({old_ref["name"]} - {old_ref["country"]})</a></li>')
-        print("</ul>")
-    print("</body>")
-    print("</html>")
+    save_changelog(current, diff)
 
 
 if __name__ == '__main__':
