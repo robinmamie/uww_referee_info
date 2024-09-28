@@ -1,16 +1,12 @@
 *.csv
-log*
 *.png
+*.log
 *.xlsx
-list.pdf
+*.pdf
 *.ipynb
-execut*.sh
+execute*
 referee_changes.html
 !res/referee_changes.html
-
-archive
-last
-referees
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

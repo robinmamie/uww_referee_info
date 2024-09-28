@@ -218,7 +218,7 @@ def save_changelog(data: dict, diff: dict) -> None:
 
 
 def main() -> None:
-    old = load_csv(open("last"), key="id_number")
+    old = load_csv(open("last.csv"), key="id_number")
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
     
