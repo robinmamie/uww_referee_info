@@ -134,7 +134,7 @@ def change_referee(current: dict, changes: dict) -> None:
     card = update_card(data, get_change_reason(data, changes['changes']))
     
     for item_changed in list(changes['changes'].keys()):
-        if not "is_active" in item_changed:
+        if "is_active" not in item_changed and 'athena' not in item_changed:
             elementChanged = card.find(id=f"user{item_changed.title()}_{date}")
             elementChanged['class'] = [BLINK_CLASS, item_changed]
 
@@ -223,7 +223,7 @@ def main() -> None:
     diff = compare(old, current)
     
     for changes in diff['changed']:
-        if changes['changes'] != 1 and not 'athena' in changes['changes']:
+        if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
             change_referee(current, changes)
     for new_ref in diff['added']:
         already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
