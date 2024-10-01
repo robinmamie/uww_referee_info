@@ -199,9 +199,18 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
                     else:
                         fromStr = from_to[0] if from_to[0] else "?"
                         inside_item.string = f"{col.title().replace('_', ' ')} from {fromStr} to {from_to[1]}"
+        
+
+def updateIndex(current: dict) -> None:
+    with open('referees/referees.json') as f:
+        referee_index = json.load(f)
+    for _, ref in current.items():
+        referee_index[ref['name']] = int(ref['id_number'])
+    with open('referees/referees.json', 'w') as f:
+        json.dump(referee_index, f)
 
 
-def save_changelog(data: dict, diff: dict) -> None:
+def saveChangelog(data: dict, diff: dict) -> None:
     with open(CHANGELOG_PATH) as f:
         changelog = BeautifulSoup(f.read(), 'html.parser')
 
@@ -222,6 +231,8 @@ def main() -> None:
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
     
+    updateIndex(current)
+
     for changes in diff['changed']:
         if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
             change_referee(current, changes)
@@ -231,7 +242,7 @@ def main() -> None:
     for old_ref in diff['removed']:
         remove_referee(old_ref)
 
-    save_changelog(current, diff)
+    saveChangelog(current, diff)
 
 
 if __name__ == '__main__':
