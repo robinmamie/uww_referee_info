@@ -1,6 +1,7 @@
 import country_converter as coco
 
 import glob
+import json
 import os
 import sys
 
@@ -175,6 +176,8 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
             name = ind_data["name"]
             country = ind_data["country"]
             category = ind_data["category"]
+            if not category:
+                category = '?'
             birthdate = ind_data["birthdate"]
             age = int(date.split('-')[0]) - int(birthdate.split('-')[0])
 
@@ -192,13 +195,14 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
                     if col == 'photo':
                         inside_item.string = "The profile picture has changed."
                     elif col == 'is_active':
-                        if from_to[1]:
+                        if from_to[1] == 'True':
                             inside_item.string = "Licence is now active."
                         else:
                             inside_item.string = "Licence has been deactivated."
                     else:
                         fromStr = from_to[0] if from_to[0] else "?"
-                        inside_item.string = f"{col.title().replace('_', ' ')} from {fromStr} to {from_to[1]}"
+                        toStr = from_to[1] if from_to[1] else "?"
+                        inside_item.string = f"{col.title().replace('_', ' ')} from {fromStr} to {toStr}"
         
 
 def updateIndex(current: dict) -> None:
@@ -233,14 +237,14 @@ def main() -> None:
     
     updateIndex(current)
 
-    for changes in diff['changed']:
-        if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
-            change_referee(current, changes)
-    for new_ref in diff['added']:
-        already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
-        create_referee(new_ref, already_exists)
-    for old_ref in diff['removed']:
-        remove_referee(old_ref)
+   for changes in diff['changed']:
+       if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
+           change_referee(current, changes)
+   for new_ref in diff['added']:
+       already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
+       create_referee(new_ref, already_exists)
+   for old_ref in diff['removed']:
+       remove_referee(old_ref)
 
     saveChangelog(current, diff)
 
