@@ -237,14 +237,14 @@ def main() -> None:
     
     updateIndex(current)
 
-   for changes in diff['changed']:
-       if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
-           change_referee(current, changes)
-   for new_ref in diff['added']:
-       already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
-       create_referee(new_ref, already_exists)
-   for old_ref in diff['removed']:
-       remove_referee(old_ref)
+    for changes in diff['changed']:
+        if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
+            change_referee(current, changes)
+    for new_ref in diff['added']:
+        already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
+        create_referee(new_ref, already_exists)
+    for old_ref in diff['removed']:
+        remove_referee(old_ref)
 
     saveChangelog(current, diff)
 
