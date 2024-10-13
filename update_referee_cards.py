@@ -127,7 +127,7 @@ def update_referee(card: BeautifulSoup, already_exists: bool, id_number: str) ->
 
 
 def create_referee(data: dict, already_exists: bool, reason="Created on") -> None:
-    update_referee(update_card(data, reason), False, data['id_number'])
+    update_referee(update_card(data, reason), already_exists, data['id_number'])
 
 
 def change_referee(current: dict, changes: dict) -> None:
