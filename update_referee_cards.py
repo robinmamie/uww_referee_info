@@ -63,7 +63,7 @@ def get_change_reason(data: dict, changes: dict) -> str:
     if "new_is_active" in changes:
         return "Activity checked on"
     if "is_active" in changes:
-        return "Active as of" if data['is_active'] else "Inactive as of"
+        return "Active as of" if "True" == data['is_active'] else "Inactive as of"
     return "Effective from"
 
 
