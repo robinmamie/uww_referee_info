@@ -51,7 +51,7 @@ def get_change_reason(data: dict, changes: dict) -> str:
             return "Category upgraded on"
         return "Category downgraded on"
     if "name" in changes:
-        return "Named changed on"
+        return "Name changed on"
     if "sex" in changes:
         return "Gender changed on"
     if "country" in changes:

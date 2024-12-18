@@ -46,7 +46,7 @@ def graph_data():
         ax.set_title(f"UWW {category} ({nb_ref_cat} active, {nb_ref_cat_all} overall referees)\nsplit by gender")
         ax.set_xlabel("Birthyear")
         ax.set_ylabel("Number of referees\nby birthyear")
-        ax.set_ylim(0, 45)
+        ax.set_ylim(0, 35)
         ax.grid(axis='y')
         plt.savefig(f'img/stats_{category}.png', dpi=300, bbox_inches='tight')
 
