@@ -18,10 +18,9 @@ def get_inactive_referees(df, category):
 def graph_data():
     df_uww_all = pd.read_csv('uww_referees.csv')
     df_uww_all['birthdate'] = pd.to_datetime(df_uww_all['birthdate'])
-    df_int = df_uww_all[df_uww_all.is_active]
+    df_int = df_uww_all
 
     colors = {
-        'RCM': ['black', 'gray', 'lightgray'],
         'IS': ['gold', 'yellow', 'lightgray'],
         'I': ['r', 'pink', 'lightgray'],
         'II': ['g', 'lightgreen', 'lightgray'],
@@ -30,20 +29,16 @@ def graph_data():
     for category in colors:
         df_tmp_m = get_ref_count(df_int, category, 'M')
         df_tmp_f = get_ref_count(df_int, category, 'F')
-        df_tmp_inactive = get_inactive_referees(df_uww_all, category)
 
-        nb_ref_cat =  df_int[df_int['category'] == category]['name'].count()
         nb_ref_cat_all =  df_uww_all[df_uww_all['category'] == category]['name'].count()
-        nb_ref_cat_inactive = nb_ref_cat_all - nb_ref_cat
 
         df_tmp = pd.DataFrame({
             f"Female ({df_tmp_f['name'].sum()})": df_tmp_f['name'],
             f"Male ({df_tmp_m['name'].sum()})": df_tmp_m['name'],
-            f"Inactive ({df_tmp_inactive['name'].sum()})": df_tmp_inactive['name'],
         })
 
         ax = df_tmp.plot(kind="bar", stacked=True, color=colors[category], figsize=(10,4))
-        ax.set_title(f"UWW {category} ({nb_ref_cat} active, {nb_ref_cat_all} overall referees)\nsplit by gender")
+        ax.set_title(f"UWW {category} ({nb_ref_cat_all} referees)\nsplit by gender")
         ax.set_xlabel("Birthyear")
         ax.set_ylabel("Number of referees\nby birthyear")
         ax.set_ylim(0, 35)
