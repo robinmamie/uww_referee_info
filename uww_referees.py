@@ -15,7 +15,7 @@ from tqdm import tqdm
 def download_referee_list_link() -> str:
     soup = BeautifulSoup(requests.get('https://uww.org/development/referees').content, "html.parser")
     for link in soup.find_all('a'):
-        if "Referees' list" in link.text and 'Beach' not in link.text:
+        if "Referees' list" in link.text and 'Beach' not in link.text and 'Grappling' not in link.text:
             pdf_link = link.get('href')
             pdf_file = requests.get(pdf_link)
             filename = 'list.pdf'
@@ -58,7 +58,7 @@ def get_referee_info_from_athena(license_numbers: list[int]) -> list[dict]:
             referee['sex'] = soup.find_all("h1")[1].text.split('(')[-1].split(')')[0].upper()
             referee['country'] = ' '.join(soup.find("h4").text.split()).split(' - ')[1].strip()
             category = soup.find('span',  {'class': 'label-referee'})
-            if category:
+            if category and 'Olympic styles' in category.text:
                 referee['category'] = category.text.split()[-1]
             else:
                 referee['category'] = None
@@ -90,7 +90,7 @@ def save_info_to_file(referees: list[dict]) -> None:
     df['athena'] = df['athena'].apply(make_hyperlink)
 
     writer = pd.ExcelWriter('uww_referees.xlsx') 
-    df.to_excel(writer, sheet_name='UWW referees', index=False, na_rep='NaN')
+    df.to_excel(writer, sheet_name='UWW referees', index=False, na_rep='')
     
     for column in df:
         column_length = max(df[column].astype(str).map(len).max(), len(column))
