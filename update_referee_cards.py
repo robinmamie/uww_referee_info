@@ -202,7 +202,9 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
                     else:
                         fromStr = from_to[0] if from_to[0] else "?"
                         toStr = from_to[1] if from_to[1] else "?"
-                        inside_item.string = f"{col.title().replace('_', ' ')} from {fromStr} to {toStr}"
+                        title = col.title().replace('_', ' ')
+                        title = 'Gender' if title == 'Sex' else title
+                        inside_item.string = f"{title} from {fromStr} to {toStr}"
         
 
 def updateIndex(current: dict) -> None:
