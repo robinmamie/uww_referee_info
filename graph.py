@@ -21,6 +21,7 @@ def graph_data():
     df_int = df_uww_all
 
     colors = {
+        'RCM': ['black', 'darkgray', 'lightgray'],
         'IS': ['gold', 'yellow', 'lightgray'],
         'I': ['r', 'pink', 'lightgray'],
         'II': ['g', 'lightgreen', 'lightgray'],
