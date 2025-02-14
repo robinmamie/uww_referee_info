@@ -51,8 +51,6 @@ def extract_license_numbers_from_pdf() -> list[int]:
             4177,
             4734,
             4150,
-            3408,
-            3231,
     ]
 
     return instructors + license_numbers

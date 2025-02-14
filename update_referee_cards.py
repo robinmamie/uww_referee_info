@@ -15,7 +15,7 @@ cc = coco.CountryConverter()
 emoji_a = 127462
 base_path = "referees"
 date = datetime.today().strftime('%Y-%m-%d')
-possible_categories = ["III","II","I","IS","INS","RCM","HON"]
+possible_categories = ["III","II","I","IS","INS","RCM","RAB","HON"]
 
 BLINK_CLASS = "blink_off"
 ID_CARD_PATH = "res/id_card.html"

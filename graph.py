@@ -16,20 +16,19 @@ def get_inactive_referees(df, category):
 
 
 def graph_data():
-    df_uww_all = pd.read_csv('uww_referees.csv')
-    df_uww_all['birthdate'] = pd.to_datetime(df_uww_all['birthdate'])
-    df_int = df_uww_all
-
     colors = {
-        'RCM': ['black', 'darkgray', 'lightgray'],
         'IS': ['gold', 'yellow', 'lightgray'],
         'I': ['r', 'pink', 'lightgray'],
         'II': ['g', 'lightgreen', 'lightgray'],
         'III': ['b', 'lightblue', 'lightgray'],
     }
+    df_uww_all = pd.read_csv('uww_referees.csv')
+    df_uww_all['birthdate'] = pd.to_datetime(df_uww_all['birthdate'])
+    df_uww_all = df_uww_all.loc[df_uww_all['category'].isin(colors)]
+
     for category in colors:
-        df_tmp_m = get_ref_count(df_int, category, 'M')
-        df_tmp_f = get_ref_count(df_int, category, 'F')
+        df_tmp_m = get_ref_count(df_uww_all, category, 'M')
+        df_tmp_f = get_ref_count(df_uww_all, category, 'F')
 
         nb_ref_cat_all =  df_uww_all[df_uww_all['category'] == category]['name'].count()
 
