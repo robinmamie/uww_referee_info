@@ -38,22 +38,13 @@ def extract_license_numbers_from_pdf() -> list[int]:
     # Joining strings into valid numbers
     license_numbers = [(int(''.join(line)) if re.match(r'^\d*$', line[0]) else int(line[1])) for line in numbers_raw]
 
-    # Add instructors' numbers
-    instructors = [
+    # Add RAB members' numbers
+    rab = [
             4236,
             2525,
-            4717,
-            4729,
-            3520,
-            4489,
-            4443,
-            4754,
-            4177,
-            4734,
-            4150,
     ]
 
-    return instructors + license_numbers
+    return rab + license_numbers
 
 
 def fetch_referee_page(url: str) -> str:
