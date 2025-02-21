@@ -31,8 +31,8 @@ def extract_license_numbers_from_pdf() -> list[int]:
     contents = '\n'.join([page.extract_text() for page in reader.pages])
     # Split lines, keep only two last words
     lines = [line.strip().split()[-2:] for line in contents.split('\n') if line.strip()]
-    # Check whether the last word is a number between 1 and 3 digits
-    numbers_raw = [line for line in lines if len(line) == 2 and re.match(r'^\d{1,3}$', line[1])]
+    # Check whether the last word is a number between 1 and 7 digits
+    numbers_raw = [line for line in lines if len(line) == 2 and re.match(r'^\d{1,7}$', line[1])]
     # Remove instances where the first word is a number 
     numbers_raw = [line for line in numbers_raw if not (re.match(r'^\d{2}$', line[1]) and re.match(r'^\d*$', line[0]))]
     # Joining strings into valid numbers
