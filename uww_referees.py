@@ -35,6 +35,8 @@ def extract_license_numbers_from_pdf() -> list[int]:
     numbers_raw = [line for line in lines if len(line) == 2 and re.match(r'^\d{1,7}$', line[1])]
     # Remove instances where the first word is a number 
     numbers_raw = [line for line in numbers_raw if not (re.match(r'^\d{2}$', line[1]) and re.match(r'^\d*$', line[0]))]
+    # Remove title to exclude CURRENT_YEAR
+    numbers_raw = [line for line in numbers_raw if line[0] != 'FOR']
     # Joining strings into valid numbers
     license_numbers = [(int(''.join(line)) if re.match(r'^\d*$', line[0]) else int(line[1])) for line in numbers_raw]
 
