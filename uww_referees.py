@@ -44,6 +44,7 @@ def extract_license_numbers_from_pdf() -> list[int]:
     rab = [
             4236,
             2525,
+            3520,
     ]
 
     return rab + license_numbers
