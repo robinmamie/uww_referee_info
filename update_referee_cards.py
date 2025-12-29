@@ -43,6 +43,8 @@ def get_ref_path(id_number: str) -> str:
 def get_change_reason(data: dict, changes: dict) -> str:
     if "category" in changes:
         change = changes['category']
+        if change[0] == 'RCM':
+            return "Category updated on"
         if change[1] not in possible_categories:
             return "Category erased on"
         if change[0] not in possible_categories:
