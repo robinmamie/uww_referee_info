@@ -88,8 +88,12 @@ def update_card(data: dict, reason: str, is_removed=False) -> BeautifulSoup:
         card = BeautifulSoup(f.read(), 'html.parser')
 
     referee_id = data['id_number']
-    country2 = cc.convert(names = data['country'][:3], src='IOC', to='ISO2')
-    emoji_flag = get_emoji_flag(country2)
+    country_name = data['country'][:3]
+    if country_name == 'PYF':
+        emoji_flag = "🇵🇫"
+    else:
+        country2 = cc.convert(names = country_name, src='IOC', to='ISO2')
+        emoji_flag = get_emoji_flag(country2)
     sex = "♀" if data['sex'] == "F" else "♂" if data['sex'] == "M" else "♂♀"
     category = data['category'] if data['category'] in possible_categories else "?"
 
