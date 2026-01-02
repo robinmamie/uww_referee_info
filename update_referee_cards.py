@@ -36,8 +36,12 @@ def get_emoji_flag(country2: str) -> str:
     return get_emoji_letter_flag(country2[0]) + get_emoji_letter_flag(country2[1])
 
 
+def get_ref_path_folder(id_number: str) -> str:
+    return f"{base_path}/{int(id_number)}"
+
+
 def get_ref_path(id_number: str) -> str:
-    return f"{base_path}/{int(id_number):07d}.html"
+    return f"{get_ref_path_folder(id_number)}/index.html"
 
 
 def get_change_reason(data: dict, changes: dict) -> str:
@@ -127,6 +131,9 @@ def update_referee(card: BeautifulSoup, already_exists: bool, id_number: str) ->
     if currentState:
         page.find(id="historyContent").insert_after(currentState)
     page.find(id="currentState").append(card.extract())
+
+    if not os.path.isdir(get_ref_path_folder(id_number)):
+        os.makedirs(get_ref_path_folder(id_number))
 
     with open(get_ref_path(id_number), "w") as f:
         f.write(str(page))
