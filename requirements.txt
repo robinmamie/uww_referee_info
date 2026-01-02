@@ -5,7 +5,7 @@ csv_diff==1.2
 matplotlib==3.9.2
 numpy==1.26.4
 pandas==2.2.2
-PyPDF2==2.10.5
+pypdf==6.5.0
 requests==2.32.3
 tqdm==4.66.5
 XlsxWriter==3.2.0

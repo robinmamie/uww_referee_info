@@ -1,7 +1,7 @@
 import pandas as pd
 
 import csv
-import PyPDF2
+import pypdf
 import re
 import requests
 import sys
@@ -27,7 +27,7 @@ def download_referee_list_link() -> str:
 def extract_license_numbers_from_pdf(only_rcm = False) -> list[int]:
     filename = download_referee_list_link()
     # Read PDF content
-    reader = PyPDF2.PdfReader(filename)
+    reader = pypdf.PdfReader(filename)
     contents = '\n'.join([page.extract_text() for page in reader.pages])
     # Only keep RCM if needed
     if only_rcm:
