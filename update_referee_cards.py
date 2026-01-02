@@ -15,7 +15,7 @@ cc = coco.CountryConverter()
 emoji_a = 127462
 base_path = "referees"
 date = datetime.today().strftime('%Y-%m-%d')
-possible_categories = ["III","II","I","IS","INS","RCM","RAB","HON"]
+possible_categories = ["III","II","I","IS","IS-RCM","INS","RCM","RAB","HON"]
 
 BLINK_CLASS = "blink_off"
 ID_CARD_PATH = "res/id_card.html"
@@ -246,8 +246,7 @@ def main() -> None:
     updateIndex(current)
 
     for changes in diff['changed']:
-        if len(changes['changes']) > 1 or 'athena' not in changes['changes']:
-            change_referee(current, changes)
+        change_referee(current, changes)
     for new_ref in diff['added']:
         already_exists = os.path.isfile(get_ref_path(new_ref['id_number']))
         create_referee(new_ref, already_exists)
