@@ -187,7 +187,7 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
             birthdate = ind_data["birthdate"]
             age = int(date.split('-')[0]) - int(birthdate.split('-')[0])
 
-            link = doc.new_tag("a", href=get_ref_path(id))
+            link = doc.new_tag("a", href=f"/{get_ref_path(id)}")
             link.string = f"{name} ({country}, {category}, {age} years old this year)"
             item.append(link)
 
@@ -234,7 +234,7 @@ def saveChangelog(data: dict, diff: dict) -> None:
     list_changes(changelog, data, diff, 'added', False)
     list_changes(changelog, data, diff, 'removed', False)
 
-    with open(CHANGELOG_PATH.split("/")[-1], "w") as f:
+    with open("index.html", "w") as f:
         f.write(str(changelog))
 
 
