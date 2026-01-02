@@ -194,7 +194,7 @@ def list_changes(doc: BeautifulSoup, data: dict, diff: dict, key: str, sublist: 
             birthdate = ind_data["birthdate"]
             age = int(date.split('-')[0]) - int(birthdate.split('-')[0])
 
-            link = doc.new_tag("a", href=f"/{get_ref_path(id)}")
+            link = doc.new_tag("a", href=f"/{get_ref_path_folder(id)}")
             link.string = f"{name} ({country}, {category}, {age} years old this year)"
             item.append(link)
 
