@@ -1,4 +1,4 @@
-const id_number = parseInt(window.location.pathname.split('/').pop().split('_')[0], 10);
+const id_number = parseInt($( "h1" ).text().split('#')[1], 10);
 const name = $("h2").eq(1).text();
 $(document).prop('title', id_number + ' - ' + name);
 
