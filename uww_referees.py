@@ -24,11 +24,14 @@ def download_referee_list_link() -> str:
                 return filename
 
 
-def extract_license_numbers_from_pdf() -> list[int]:
+def extract_license_numbers_from_pdf(only_rcm = False) -> list[int]:
     filename = download_referee_list_link()
     # Read PDF content
     reader = PyPDF2.PdfReader(filename)
     contents = '\n'.join([page.extract_text() for page in reader.pages])
+    # Only keep RCM if needed
+    if only_rcm:
+        contents = '\n'.join([line for line in contents.split('\n') if "RCM" in line])
     # Split lines, keep only two last words
     lines = [line.strip().split()[-2:] for line in contents.split('\n') if line.strip()]
     # Check whether the last word is a number between 1 and 7 digits
@@ -40,11 +43,10 @@ def extract_license_numbers_from_pdf() -> list[int]:
     # Joining strings into valid numbers
     license_numbers = [(int(''.join(line)) if re.match(r'^\d*$', line[0]) else int(line[1])) for line in numbers_raw]
 
-    # Add RAB members' numbers
-    rab = [
-            4236,
-            2525,
-    ]
+    # Add RAB members' numbers if needed
+    rab = []
+    if not only_rcm:
+        rab = [4236, 2525]
 
     return rab + license_numbers
 
@@ -111,6 +113,9 @@ def save_info_to_file(referees: list[dict]) -> None:
 def get_international_referees_info() -> None:
     license_numbers = extract_license_numbers_from_pdf()
     referees = get_referee_info_from_athena(license_numbers)
+    # Extract RCM information from PDF
+    for rcm in extract_license_numbers_from_pdf(True):
+        [ref for ref in referees if ref['id_number'] == rcm][0]['category'] = 'IS-RCM'
     save_info_to_file(referees)
 
 
