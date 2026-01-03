@@ -228,6 +228,16 @@ def updateIndex(current: dict) -> None:
     with open('referees/referees.json', 'w') as f:
         json.dump(referee_index, f)
 
+    with open('referees/referees-inv.json') as f:
+        referee_index = json.load(f)
+    for _, ref in current.items():
+        referee_index[int(ref['id_number'])] = {
+            'name': ref['name'],
+            'country': ref['country'],
+        }
+    with open('referees/referees-inv.json', 'w') as f:
+        json.dump(referee_index, f)
+
 
 def saveChangelog(data: dict, diff: dict) -> None:
     with open(CHANGELOG_PATH) as f:
