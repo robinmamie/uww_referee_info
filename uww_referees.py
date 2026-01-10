@@ -7,8 +7,7 @@ import requests
 import sys
 
 from bs4 import BeautifulSoup
-from collections import defaultdict
-from datetime import datetime, date
+from datetime import datetime
 from tqdm import tqdm
 
 

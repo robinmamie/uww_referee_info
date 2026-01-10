@@ -1,4 +1,3 @@
-import glob
 import json
 import os
 import sys
@@ -7,7 +6,6 @@ from bs4 import BeautifulSoup
 from csv import DictWriter
 from csv_diff import load_csv, compare
 from datetime import datetime
-from tqdm import tqdm
 
 base_path = "referees"
 date = datetime.today().strftime('%Y-%m-%d')
