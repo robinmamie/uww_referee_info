@@ -73,18 +73,30 @@ def get_referee_info_from_athena(license_numbers: list[int]) -> list[dict]:
             else:
                 referee['category'] = None
             referee['birthdate'] = datetime.strptime(' '.join(soup.find("h4").text.split()).split(' - ')[0], "%b %d, %Y")
-            activity_field = soup.find('div', {'class': 'alert'})
-            activity_field_text = activity_field.text if activity_field else ''
-            referee['is_active'] = "Active referee license" in activity_field_text
             img_tag = soup.find_all("img")
             referee['photo'] = img_tag[1]["src"] if len(img_tag) > 1 else ''
-            referee['athena'] = athena_link
+            activity_field = soup.find('div', {'class': 'alert'})
+            activity_field_text = activity_field.text if activity_field else ''
+            referee['activity'] = "ACTIVE" if "Active referee license" in activity_field_text else "INACTIVE"
             referees.append(referee)
     return referees
 
 
 def make_hyperlink(value: str) -> str:
     return f'=HYPERLINK("{value}")'
+
+
+def create_xlsx(current_path_file: str) -> None:
+    df = pd.read_csv(current_path_file)
+    df['photo'] = df['photo'].apply(make_hyperlink)
+    df['athena'] = df['id_number'].apply(lambda idn: make_hyperlink(f"https://athena.uww.org/p/{idn}"))
+
+    with pd.ExcelWriter(current_path_file.replace('.csv', '.xlsx')) as writer:
+        df.to_excel(writer, sheet_name='UWW referees', index=False, na_rep='')
+        for column in df:
+            column_length = max(df[column].astype(str).map(len).max(), len(column))
+            col_idx = df.columns.get_loc(column)
+            writer.sheets['UWW referees'].set_column(col_idx, col_idx, column_length)
 
 
 def save_info_to_file(referees: list[dict]) -> None:
@@ -95,19 +107,7 @@ def save_info_to_file(referees: list[dict]) -> None:
         writer.writeheader()
         writer.writerows(referees)
 
-    df = pd.read_csv('uww_referees.csv')
-    df['photo'] = df['photo'].apply(make_hyperlink)
-    df['athena'] = df['athena'].apply(make_hyperlink)
-
-    writer = pd.ExcelWriter('uww_referees.xlsx') 
-    df.to_excel(writer, sheet_name='UWW referees', index=False, na_rep='')
-    
-    for column in df:
-        column_length = max(df[column].astype(str).map(len).max(), len(column))
-        col_idx = df.columns.get_loc(column)
-        writer.sheets['UWW referees'].set_column(col_idx, col_idx, column_length)
-    
-    writer.close()
+    create_xlsx('uww_referees.csv')
 
 
 def get_international_referees_info() -> None:
