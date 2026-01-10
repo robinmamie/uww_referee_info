@@ -1,5 +1,3 @@
-import country_converter as coco
-
 import glob
 import json
 import os
@@ -89,7 +87,6 @@ def main() -> None:
     old = load_csv(open("last.csv"), key="id_number")
     current = load_csv(open("uww_referees.csv"), key="id_number")
     diff = compare(old, current)
-    date = new_folder
 
     update_index(current)
 
