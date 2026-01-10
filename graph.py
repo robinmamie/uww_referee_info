@@ -39,7 +39,7 @@ def graph_data():
         ax.set_ylabel("Number of referees\nby birthyear")
         ax.set_ylim(0, 40)
         ax.grid(axis='y')
-        plt.savefig(f'img/stats_{category}.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'stats_{category}.png', dpi=300, bbox_inches='tight')
         plt.close(ax.get_figure())
 
 
