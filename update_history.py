@@ -4,6 +4,7 @@ import os
 import sys
 
 from bs4 import BeautifulSoup
+from csv import DictWriter
 from csv_diff import load_csv, compare
 from datetime import datetime
 from tqdm import tqdm
