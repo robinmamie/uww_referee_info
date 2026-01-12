@@ -1,0 +1,11 @@
+services:
+   uww-crawler:
+       image: uww-crawler
+       container_name: uww-crawler
+
+       build:
+         context: .
+         dockerfile: Dockerfile
+
+       volumes:
+         - ${PWD}/../data/referees:/app/referees
