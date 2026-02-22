@@ -1,9 +1,12 @@
 beautifulsoup4==4.14.3
 csv_diff==1.2
 matplotlib==3.10.8
-numpy==2.4.1
-pandas==2.3.3
-pypdf==6.6.0
+ndg-httpsclient==0.5.1
+numpy==2.4.2
+pandas==3.0.0
+pyasn1==0.6.2
+pyOpenSSL==25.3.0
+pypdf==6.6.2
 requests==2.32.5
-tqdm==4.67.1
+tqdm==4.67.3
 XlsxWriter==3.2.9

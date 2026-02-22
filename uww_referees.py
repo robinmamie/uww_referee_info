@@ -10,13 +10,12 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from tqdm import tqdm
 
-
 def download_referee_list_link() -> str:
-    soup = BeautifulSoup(requests.get('https://uww.org/development/referees').content, "html.parser")
+    soup = BeautifulSoup(get_url('https://uww.org/development/referees').content, "html.parser")
     for link in soup.find_all('a'):
         if "Referees' list" in link.text and 'Beach' not in link.text and 'Grappling' not in link.text:
             pdf_link = link.get('href')
-            pdf_file = requests.get(pdf_link)
+            pdf_file = get_url(pdf_link)
             filename = 'list.pdf'
             with open(filename, 'wb') as f:
                 f.write(pdf_file.content)
@@ -50,8 +49,14 @@ def extract_license_numbers_from_pdf(only_rcm = False) -> list[int]:
     return rab + license_numbers
 
 
-def fetch_referee_page(url: str) -> str:
-    return requests.get(url)
+def get_url(url: str) -> str:
+    attempts_left = 5
+    while attempts_left > 0:
+        try:
+            return requests.get(url)
+        except:
+            attempts_left -= 1
+    raise Exception(f"Could not reach {url} after 5 attempts.")
 
 
 def get_referee_info_from_athena(license_numbers: list[int]) -> list[dict]:
@@ -59,7 +64,7 @@ def get_referee_info_from_athena(license_numbers: list[int]) -> list[dict]:
     for license_number in tqdm(license_numbers):
         referee = {'id_number': license_number}
         athena_link = f"https://athena.uww.org/p/{license_number}"
-        page = fetch_referee_page(athena_link)
+        page = get_url(athena_link)
         soup = BeautifulSoup(page.content, "html.parser")
         if len(soup.find_all("h1")) > 1:
             # Parse only valid, common pages

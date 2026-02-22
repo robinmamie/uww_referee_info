@@ -26,4 +26,5 @@ else
    python update_history.py
    cp changes_*.csv ${archive_folder}
    echo ${time_stamp} > ${base_archive_folder}/.last
+   echo ${time_stamp} >> ${base_archive_folder}/.all
 fi
