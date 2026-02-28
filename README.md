@@ -1,6 +1,6 @@
 # International Referees' Information Extractor
 
-Python script scraping the UWW international referee information from the Athena system.
+Python script scraping the Olympic Wrestling international referee information from the Athena system.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ Install the python requirements:
 
 Run the script like so:
 
-    python uww_referees.py
+    python wrestling_referees.py
 
 This script produces the file `uww_referees.csv`, the result of the parsing/scraping, the same result in an Excel file (`uww_referees.xlsx`) and `list.pdf`, which is the official referees' list downloaded from the UWW website.
 

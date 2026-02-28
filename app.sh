@@ -7,7 +7,7 @@ mkdir -p ${archive_folder}
 
 echo "Checking (${time_stamp})"
 
-python uww_referees.py
+python wrestling_referees.py
 python graph.py
 
 montage stats_IS.png stats_I.png stats_II.png stats_III.png -mode Concatenate -tile 1x stats.png

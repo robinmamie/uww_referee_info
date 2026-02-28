@@ -19,7 +19,7 @@ ARG USER_GID=$USER_UID
 
 WORKDIR /app
 
-COPY uww_referees.py .
+COPY wrestling_referees.py .
 COPY update_history.py .
 COPY graph.py .
 COPY app.sh .

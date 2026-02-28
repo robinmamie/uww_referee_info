@@ -1,7 +1,7 @@
 services:
-   uww-crawler:
-       image: uww-crawler
-       container_name: uww-crawler
+   wrestling-crawler:
+       image: wrestling-crawler
+       container_name: wrestling-crawler
 
        build:
          context: .
